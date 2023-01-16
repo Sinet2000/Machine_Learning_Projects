@@ -1,29 +1,34 @@
 // Predict.tsx
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/index";
-import { predictValue } from "../../store/actions";
+// Predict.tsx
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { predictValue } from "../../store/imageDataSlice";
 
-const Predict: React.FC = () => {
+interface Props {}
+
+const Predict: React.FC<Props> = () => {
+  const dispatch = useDispatch();
   const imageData = useSelector((state: RootState) => state.imageData);
-  const predictedValue = useSelector(
-    (state: RootState) => state.predictedValue
-  );
+  const predictedValue = useSelector((state: RootState) => state.predictedValue);
 
-  const handlePredictClick = () => {
-    console.log("Should be fixed!");
-    //predictValue(imageData);
-  };
+  useEffect(() => {
+    if (!imageData) return;
+
+    dispatch(predictValue(imageData));
+  }, [dispatch, imageData]);
 
   return (
     <div>
-      <button onClick={handlePredictClick}>Predict value</button>
-      {predictedValue && <p>Predicted value: {predictedValue}</p>}
+      <button onClick={() => dispatch(predictValue(imageData))}>
+        Predict Value
+      </button>
+      {predictedValue && <div>Predicted value: {predictedValue}</div>}
     </div>
   );
 };
 
 export default Predict;
+
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {

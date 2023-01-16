@@ -1,29 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-interface State {
+interface RootState {
   imageData: string | null;
   predictedValue: string | null;
 }
 
-const initialState: State = {
+const initialState: RootState = {
   imageData: null,
-  predictedValue: null,
+  predictedValue: null
 };
-
-const slice = createSlice({
-  name: "imageData",
-  initialState,
-  reducers: {
-    updateImageData: (state, action: PayloadAction<string>) => {
-      state.imageData = action.payload;
-    },
-    predictValue: (state) => {
-      // make prediction here
-      state.predictedValue = "3";
-    },
-  },
-});
-
-export const { updateImageData, predictValue } = slice.actions;
-
-export default slice.reducer;

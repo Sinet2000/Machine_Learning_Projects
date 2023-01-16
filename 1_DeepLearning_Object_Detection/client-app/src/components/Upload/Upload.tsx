@@ -1,27 +1,72 @@
-import React, { useCallback } from "react";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateImageData } from '../../store';
+import { DropzoneArea } from 'material-ui-dropzone'
 
 interface Props {
-  onFileUpload: (file: File) => void;
+  // ...
 }
 
-const Upload: React.FC<Props> = ({ onFileUpload }) => {
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files) {
-        onFileUpload(event.target.files[0]);
-      }
-    },
-    [onFileUpload]
-  );
+const Upload: React.FC<Props> = () => {
+  const [image, setImage] = useState<File | null>(null);
+  const dispatch = useDispatch();
+
+  const handleDrop = (acceptedFiles: File[]) => {
+    if(acceptedFiles.length){
+      setImage(acceptedFiles[0]);
+      const reader = new FileReader();
+
+      reader.onabort = () => console.log("file reading was aborted");
+      reader.onerror = () => console.log("file reading has failed");
+
+      reader.onload = () => {
+        if (reader.result) {
+          const imageData = reader.result;
+          dispatch(updateImageData(imageData as string));
+        }
+      };
+      reader.readAsDataURL(acceptedFiles[0]);
+    }
+  }
+
+  // const onDrop = useCallback(
+  //   (acceptedFiles) => {
+  //     const file = acceptedFiles[0];
+  //     const reader = new FileReader();
+  //     reader.onabort = () => console.log("file reading was aborted");
+  //     reader.onerror = () => console.log("file reading has failed");
+  //     reader.onload = () => {
+  //       // Do whatever you want with the file contents
+  //       const binaryStr = reader.result;
+  //       dispatch(updateImageData(binaryStr as string));
+  //     };
+  //     reader.readAsDataURL(file);
+  //   },
+  //   [dispatch]
+  // );
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  //   onDrop,
+  //   accept: "image/jpeg",
+  // });
 
   return (
     <div>
-      <input type="file" onChange={handleChange} />
+      <DropzoneArea 
+        onChange={handleDrop}
+        acceptedFiles={['image/jpeg']}
+        filesLimit={1}
+        showPreviews={false}
+        showPreviewsInDropzone={true}
+        showAlerts={false}
+      />
+      {image && <img src={URL.createObjectURL(image)} alt="upload-preview" width={200} height={200}/>}
     </div>
   );
 };
 
 export default Upload;
+
+
 
 // import React, { useState } from "react";
 // import axios from "axios";

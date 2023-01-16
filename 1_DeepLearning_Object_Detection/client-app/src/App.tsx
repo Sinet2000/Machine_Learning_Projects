@@ -1,18 +1,19 @@
-import React from "react";
-import { Provider } from "react-redux";
-import store from "./store/index";
-import { PredictContainer } from "./components/Predict/Predict.container";
-import { UploadContainer } from "./components/Upload/Upload.container";
+import React from 'react';
+import { Provider } from 'react-redux';
+import store from './store';
+import { Predict } from './components/Predict';
+import { Upload } from './components/Upload';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <Provider store={store}>
-      <div>
-        <UploadContainer />
-        <PredictContainer />
+      <div className="App">
+        <Upload />
+        <Predict />
       </div>
     </Provider>
   );
-};
+}
 
 export default App;
+
