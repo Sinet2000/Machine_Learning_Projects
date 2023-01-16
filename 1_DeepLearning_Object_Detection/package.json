@@ -1,0 +1,7 @@
+{
+  "name": "Handwritten_Detection",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "ByteBandit",
+  "license": "MIT"
+}

@@ -1,0 +1,27 @@
+
+In this code, we are creating the store for our application using the createStore function from the redux package. We define the initial state of our store with an interface AppState and initial values for the properties imageData, prediction, error, and loading .
+We also define the rootReducer function which will handle the actions that we dispatch and update the state accordingly.
+
+We define four actions SET_IMAGE_DATA, SET_PREDICTION, SET_ERROR, and SET_LOADING to update the store state.
+
+We then export the store that we created using the createStore function and passing the rootReducer as an argument.
+This way you can import the store in a
+#################################################################3
+
+Here, we import configureStore from @reduxjs/toolkit and define the initial state of our store with an interface AppState and initial values for the properties imageData, prediction, error, and loading.
+We use configureStore to create our store and pass an object with the following properties:
+
+    reducer : A function that takes the current state and an action and returns the new state.
+    middleware : An array of middleware that will be applied to the store.
+
+You can also add more properties like enhancer , preloadedState etc if you want.
+
+You can then import the store in any file and have access to the state and the ability to dispatch actions, and use the useDispatch and useSelector hooks from react-redux in your components to update the state and access the state.
+
+
+######################################################
+npm install @reduxjs/toolkit
+npm install react-redux
+npm install --save-dev @types/react @types/react-dom @types/react-redux
+npm install axios
+npm install @types/axios
