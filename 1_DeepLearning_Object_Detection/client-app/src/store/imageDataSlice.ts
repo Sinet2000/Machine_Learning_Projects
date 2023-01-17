@@ -1,28 +1,32 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction, AsyncThunk } from '@reduxjs/toolkit';
+import { predictValue, uploadImage } from './actions';
 
-interface RootState {
-  imageData: string | null;
-  predictedValue: string | null;
-}
-
-const initialState: RootState = {
-  imageData: null,
-  predictedValue: null,
+const initialState = {
+  imageData: null as string | null,
+  predictedValue: null as string | null,
+  loading: false,
+  error: null as string | null
 };
 
 const imageDataSlice = createSlice({
-  name: "imageData",
+  name: 'imageData',
   initialState,
   reducers: {
-    updateImageData: (state, action: PayloadAction<string>) => {
-      state.imageData = action.payload;
+    setLoading: (state, action) => {
+      state.loading = action.payload;
     },
-    predictValue: (state, action: PayloadAction<string>) => {
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    setPredictedValue: (state, action) => {
       state.predictedValue = action.payload;
+    },
+    setImageData: (state, action) => {
+      state.imageData = action.payload;
     },
   },
 });
 
-export const { updateImageData, predictValue } = imageDataSlice.actions;
+export const { setLoading, setError, setPredictedValue, setImageData } = imageDataSlice.actions;
 
 export default imageDataSlice.reducer;

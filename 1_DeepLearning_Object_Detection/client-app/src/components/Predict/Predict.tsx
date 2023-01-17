@@ -1,33 +1,70 @@
-// Predict.tsx
-// Predict.tsx
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { predictValue } from "../../store/imageDataSlice";
+import React, { useCallback } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
-interface Props {}
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    margin: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(2),
+  },
+  linearProgress: {
+    width: "100%",
+    margin: theme.spacing(2),
+  },
+}));
 
-const Predict: React.FC<Props> = () => {
-  const dispatch = useDispatch();
-  const imageData = useSelector((state: RootState) => state.imageData);
-  const predictedValue = useSelector((state: RootState) => state.predictedValue);
+interface Props {
+  imageData: string | null;
+  predictedValue: string | null;
+  predictValue: (imageData: string) => void;
+  loading: boolean;
+  error: string | null;
+}
 
-  useEffect(() => {
-    if (!imageData) return;
-
-    dispatch(predictValue(imageData));
-  }, [dispatch, imageData]);
+const Predict: React.FC<Props> = ({
+  imageData,
+  predictedValue,
+  predictValue,
+  loading,
+  error,
+}) => {
+  const classes = useStyles();
+  const handlePredict = useCallback(() => {
+    if (imageData) {
+      predictValue(imageData);
+    }
+  }, [imageData, predictValue]);
 
   return (
-    <div>
-      <button onClick={() => dispatch(predictValue(imageData))}>
-        Predict Value
-      </button>
-      {predictedValue && <div>Predicted value: {predictedValue}</div>}
+    <div className={classes.container}>
+      <Typography variant="h6">Predict</Typography>
+      {loading && <LinearProgress className={classes.linearProgress} />}
+      {error && <Typography color="error">{error}</Typography>}
+      {predictedValue && (
+        <Typography>Predicted value: {predictedValue}</Typography>
+      )}
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="primary"
+        disabled={!imageData || loading}
+        onClick={handlePredict}
+      >
+        Predict
+      </Button>
     </div>
   );
 };
 
 export default Predict;
+
 
 
 // const useStyles = makeStyles((theme) => ({

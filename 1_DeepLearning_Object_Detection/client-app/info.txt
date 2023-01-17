@@ -25,3 +25,11 @@ npm install react-redux
 npm install --save-dev @types/react @types/react-dom @types/react-redux
 npm install axios
 npm install @types/axios
+
+
+#####
+source env/bin/activate
+export FLASK_APP=app.py
+flask run
+
+pip install pillow

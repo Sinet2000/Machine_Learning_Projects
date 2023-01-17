@@ -1,11 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import imageDataReducer from './imageDataSlice';
+import { configureStore } from '@reduxjs/toolkit';
+import thunk from 'redux-thunk';
 
-interface RootState {
-  imageData: string | null;
-  predictedValue: string | null;
-}
+const store = configureStore({
+  reducer: {
+    imageData: imageDataReducer,
+  },
+  middleware: [thunk]
+});
 
-const initialState: RootState = {
-  imageData: null,
-  predictedValue: null
-};
+export default store;

@@ -1,70 +1,77 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateImageData } from '../../store';
-import { DropzoneArea } from 'material-ui-dropzone'
+import React, { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+
+const useStyles = makeStyles((theme) => ({
+  dropzone: {
+    width: "100%",
+    height: 200,
+    borderWidth: 2,
+    borderColor: "#666",
+    borderStyle: "dashed",
+    borderRadius: 5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: theme.spacing(2),
+    margin: theme.spacing(2),
+  },
+}));
 
 interface Props {
-  // ...
+  uploadImage: (imageData: string) => void;
 }
 
-const Upload: React.FC<Props> = () => {
-  const [image, setImage] = useState<File | null>(null);
-  const dispatch = useDispatch();
+const Upload: React.FC<Props> = ({ uploadImage }) => {
+  const classes = useStyles();
 
-  const handleDrop = (acceptedFiles: File[]) => {
-    if(acceptedFiles.length){
-      setImage(acceptedFiles[0]);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      'image/jpeg': [],
+      'image/jpg': [],
+      'image/png': []
+    },
+    onDrop: (acceptedFiles) => {
+      const file = acceptedFiles[0];
       const reader = new FileReader();
-
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
-
       reader.onload = () => {
         if (reader.result) {
-          const imageData = reader.result;
-          dispatch(updateImageData(imageData as string));
+          const imageData = reader.result as string;
+          uploadImage(imageData);
         }
       };
-      reader.readAsDataURL(acceptedFiles[0]);
-    }
-  }
+      reader.readAsDataURL(file);
+    },
+  });
 
-  // const onDrop = useCallback(
-  //   (acceptedFiles) => {
-  //     const file = acceptedFiles[0];
-  //     const reader = new FileReader();
-  //     reader.onabort = () => console.log("file reading was aborted");
-  //     reader.onerror = () => console.log("file reading has failed");
-  //     reader.onload = () => {
-  //       // Do whatever you want with the file contents
-  //       const binaryStr = reader.result;
-  //       dispatch(updateImageData(binaryStr as string));
-  //     };
-  //     reader.readAsDataURL(file);
-  //   },
-  //   [dispatch]
-  // );
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
-  //   onDrop,
-  //   accept: "image/jpeg",
-  // });
+  const onClick = useCallback(() => {
+    (document.querySelector("input[type='file']") as HTMLInputElement).click();
+  }, []);
 
   return (
-    <div>
-      <DropzoneArea 
-        onChange={handleDrop}
-        acceptedFiles={['image/jpeg']}
-        filesLimit={1}
-        showPreviews={false}
-        showPreviewsInDropzone={true}
-        showAlerts={false}
-      />
-      {image && <img src={URL.createObjectURL(image)} alt="upload-preview" width={200} height={200}/>}
-    </div>
+    <>
+      <div {...getRootProps({ className: classes.dropzone })} onClick={onClick}>
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the file here ...</p>
+        ) : (
+          <>
+            <Typography variant="h6" component="h3">
+              Drag 'n' drop image here, or click to select image
+            </Typography>
+            <Typography variant="subtitle1">
+              Only .jpg format allowed
+            </Typography>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
 export default Upload;
+
 
 
 
